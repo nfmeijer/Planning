@@ -107,19 +107,64 @@ body.rsz{cursor:col-resize;user-select:none}
 #dep .post{color:var(--c-vrienden);font-weight:600}
 .note{color:var(--muted);font-size:12px;max-width:80ch}
 #src{max-width:none}
-@media (max-width:640px){:root{--namew:150px;--dayw:14px}.row .namecol .id{display:none}}
+@media (max-width:640px){:root{--namew:112px;--dayw:14px}.row .namecol .id{display:none}}
+.mrow{display:none}
+#mtog{font:inherit;font-weight:600;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 12px;min-height:40px;cursor:pointer}
+@media (max-width:640px){
+  body{padding:max(6px,env(safe-area-inset-top,0px)) 6px 0 6px}
+  .wrap{gap:6px;height:calc(100dvh - 12px);min-height:0}
+  .wrap>div:first-child{display:flex;flex-wrap:wrap;align-items:center;gap:2px 8px}
+  .sub{flex-basis:100%}
+  .wrap>div:first-child h1{font-size:17px}
+  .mrow{display:block}
+  .wrap:not(.mopen) .mfold{display:none!important}
+  .wrap:not(.mopen) .gantt{flex:1;min-height:0;max-height:none}
+  .wrap.mopen{height:auto}
+  .wrap.mopen .gantt{max-height:70dvh}
+  .gantt{border-radius:4px}
+  .bar{gap:8px}.bar label{min-height:32px}
+  .kpis{gap:6px 18px}
+  .msb{min-height:40px}
+  .chip{padding:6px 6px}
+}
+
+.views{display:inline-flex;align-self:flex-start;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel)}
+.views button{font:inherit;font-weight:600;color:var(--fg);background:none;border:0;padding:8px 14px;min-height:38px;cursor:pointer}
+.views button[aria-pressed=true]{background:var(--fg);color:var(--bg)}
+body.vagenda #gantt,body.vagenda #dep{display:none}
+#agenda{display:flex;flex-direction:column;gap:10px;min-height:0}
+#agenda[hidden]{display:none}
+.anav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.anav button,.anav input{font:inherit;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 12px;min-height:40px;cursor:pointer}
+#abody{display:flex;flex-direction:column;gap:12px;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch}
+.adh{display:flex;flex-direction:column;gap:2px}.adh b{font-size:18px}.adh span{color:var(--muted)}
+.ag{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.agh{display:flex;align-items:center;gap:8px;padding:8px 12px;font-weight:600;background:var(--weekend)}
+.agh i{width:12px;height:12px;border-radius:3px;flex:none}.agh span{margin-left:auto;font-weight:400;color:var(--muted)}
+.acard{padding:9px 12px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:3px}
+.acard .t{font-weight:600}.acard .t small{font-family:var(--mono);font-weight:400;color:var(--muted);margin-right:6px}
+.acard .r{color:var(--muted);font-size:12px}
+.acard .w{color:var(--muted);font-size:11px}
+.acard .b{display:flex;flex-wrap:wrap;gap:4px 6px;margin-top:2px}
+.pill{font-size:11px;padding:1px 7px;border-radius:10px;border:1px solid var(--line);color:var(--muted)}
+.pill.red{color:var(--deadline);border-color:var(--deadline)}.pill.pri{color:var(--fg);border-color:var(--fg)}
+.acard.pm{opacity:.6}
+@media (max-width:640px){.wrap:not(.mopen) #agenda{flex:1;overflow:hidden}.views button{flex:1}.views{align-self:stretch}.anav input{flex:1;min-width:0}}
+@media (pointer:coarse),(max-width:640px){#tip{left:8px!important;right:8px!important;top:auto!important;bottom:calc(8px + env(safe-area-inset-bottom,0px))!important;max-width:none;font-size:13px;padding:10px 12px}}
 details#chk summary{cursor:pointer;color:var(--fg);font-weight:600}#chkb ul{margin:6px 0 10px 18px;padding:0}#chkb h4{margin:8px 0 2px;font-size:12px}.live{color:var(--c-niels);font-weight:600}.stale{color:var(--deadline);font-weight:600}
 </style>
 
 <div class="wrap">
   <div>
     <h1>Planning Spant 40</h1>
-    <p class="sub">Alleen taken met prioriteit MUST. Verbouwing per ruimte op dagniveau, van sleuteloverdracht 16 november 2026 tot verhuizing op 1 februari 2027. De tijdlijn loopt t/m week 6.</p>
+    <p class="sub mfold">Alleen taken met prioriteit MUST. Verbouwing per ruimte op dagniveau, van sleuteloverdracht 16 november 2026 tot verhuizing op 1 februari 2027. De tijdlijn loopt t/m week 6.</p>
   </div>
-  <div class="note" id="src">Momentopname wordt geladen…</div>
-  <div class="kpis" id="kpis"></div>
-  <details class="note" id="chk" hidden><summary id="chks"></summary><div id="chkb"></div></details>
-  <div class="bar">
+  <div class="views" id="views" role="group" aria-label="Weergave"><button type="button" data-v="agenda">Per dag</button><button type="button" data-v="gantt">Planning</button></div>
+  <div class="mrow"><button type="button" id="mtog" aria-expanded="false">☰ Filters &amp; info</button></div>
+  <div class="note mfold" id="src">Momentopname wordt geladen…</div>
+  <div class="kpis mfold" id="kpis"></div>
+  <details class="note mfold" id="chk" hidden><summary id="chks"></summary><div id="chkb"></div></details>
+  <div class="bar mfold">
     <div class="ms" id="msv"><button type="button" class="msb"></button><div class="msp"></div></div><div class="ms" id="msr"><button type="button" class="msb"></button><div class="msp"></div></div>
     <div class="ms" id="msu"><button type="button" class="msb"></button><div class="msp"></div></div>
     <label><input type="checkbox" id="fc"> Alleen kritiek (≤ 2 dagen speling)</label>
@@ -127,10 +172,14 @@ details#chk summary{cursor:pointer;color:var(--fg);font-weight:600}#chkb ul{marg
     <label><input type="checkbox" id="fd" checked> Afhankelijkheden (lijnen)</label>
     <input type="search" id="fq" placeholder="Zoek taak of ID" aria-label="Zoek taak of ID">
   </div>
-  <div class="legend" id="legend"></div>
+  <div class="legend mfold" id="legend"></div>
+  <div id="agenda" hidden>
+    <div class="anav"><button type="button" id="aprev" aria-label="Vorige dag">◀</button><button type="button" id="atoday">Vandaag</button><button type="button" id="anext" aria-label="Volgende dag">▶</button><input type="date" id="adate" aria-label="Kies datum"></div>
+    <div id="abody"></div>
+  </div>
   <div class="gantt" id="gantt"><div class="grid" id="grid"></div></div>
-  <div id="dep">Klik op een taak om te zien waar die op wacht (blauw) en wat erna komt (oranje).</div>
-  <p class="note">Rode rand = geen speling tot 1 februari. Rode streep = deadline uit je sheet. Gearceerde balken vallen bewust na de verhuizing. Duren en volgorde zijn de inschatting van een werkvoorbereider op basis van de plattegronden en je Overzicht werkzaamheden; Freek moet de data nog bevestigen.</p>
+  <div id="dep" class="mfold">Klik op een taak om te zien waar die op wacht (blauw) en wat erna komt (oranje).</div>
+  <p class="note mfold">Rode rand = geen speling tot 1 februari. Rode streep = deadline uit je sheet. Gearceerde balken vallen bewust na de verhuizing. Duren en volgorde zijn de inschatting van een werkvoorbereider op basis van de plattegronden en je Overzicht werkzaamheden; Freek moet de data nog bevestigen.</p>
 </div>
 <div id="tip"></div>
 
@@ -327,6 +376,7 @@ function draw(){
   const tl = dayIdx(TARGET);
   g.innerHTML = html + `<div class="line target" style="left:calc(var(--namew) + ${tl+1} * var(--dayw) - 2px);top:42px"><span>verhuizing 1 feb</span></div>`+todayLine();
   deps();
+  try{renderAgenda();}catch(e){}
 }
 const tip=document.getElementById('tip');
 document.getElementById('grid').addEventListener('mousemove',e=>{
@@ -339,7 +389,7 @@ document.getElementById('grid').addEventListener('mousemove',e=>{
   const x=Math.min(e.clientX+14, innerWidth-tip.offsetWidth-8), y=Math.min(e.clientY+14, innerHeight-tip.offsetHeight-8);
   tip.style.left=x+'px'; tip.style.top=y+'px';
 });
-document.getElementById('grid').addEventListener('mouseleave',()=>tip.style.display='none');
+document.getElementById('grid').addEventListener('mouseleave',()=>{if(!matchMedia('(pointer:coarse),(max-width:640px)').matches)tip.style.display='none';});
 let SEL=null;
 const byId=id=>DATA.find(x=>x.id===id);
 function deps(){
@@ -412,6 +462,91 @@ loadLive();
     document.documentElement.style.setProperty('--namew',w+'px'); fit(); deps(); });
   document.addEventListener('pointerup',()=>{ if(!drag)return; drag=null; document.body.classList.remove('rsz'); try{localStorage.setItem('namew',Math.round(curNW()));}catch(e){} });
   document.addEventListener('dblclick',e=>{ if(!e.target.closest('.grip'))return; document.documentElement.style.removeProperty('--namew'); try{localStorage.removeItem('namew');}catch(x){} fit(); deps(); });
+})();
+
+(function(){
+  const wrap=document.querySelector('.wrap'), btn=document.getElementById('mtog');
+  btn.addEventListener('click',()=>{const o=wrap.classList.toggle('mopen'); btn.setAttribute('aria-expanded',o); btn.innerHTML=(o?'✕ Sluit filters':'☰ Filters &amp; info'); if(!o)fit();});
+  const gr=document.getElementById('grid'), tp=document.getElementById('tip');
+  gr.addEventListener('click',e=>{ if(!matchMedia('(pointer:coarse),(max-width:640px)').matches)return;
+    const r=e.target.closest('.row'); if(!r)return;
+    r.dispatchEvent(new MouseEvent('mousemove',{clientX:e.clientX,clientY:e.clientY,bubbles:true}));
+  });
+  document.addEventListener('click',e=>{ if(matchMedia('(pointer:coarse),(max-width:640px)').matches&&!e.target.closest('.row'))tp.style.display='none'; });
+  const ti=dayIdx(iso(new Date()));
+  if(ti>0&&ti<N){ const dw=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--dayw'))||16; document.getElementById('gantt').scrollLeft=Math.max(0,ti*dw-24); }
+})();
+
+/* ===== Weergave 'Per dag' ===== */
+const NLD=['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'], NLM=['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+const dlong=s=>{const d=new Date(s+'T00:00:00');return NLD[d.getDay()]+' '+d.getDate()+' '+NLM[d.getMonth()]+' '+d.getFullYear();};
+const dshort=s=>{const d=new Date(s+'T00:00:00');return d.getDate()+'-'+(d.getMonth()+1);};
+const addD=(s,n)=>{const d=new Date(s+'T00:00:00');d.setDate(d.getDate()+n);return iso(d);};
+const WIN_FIRST=iso(START), WIN_LAST=addD(WIN_FIRST,N-1);
+function worksOn(u,s){ if(u==='Wachttijd')return true; if(HOL.includes(s))return false; const wd=new Date(s+'T00:00:00').getDay();
+  if(u==='Vrienden')return wd===0||wd===6; if(u==='Niels/Monique')return true; return wd>=1&&wd<=5; }
+let AD=(()=>{const t=iso(new Date());return (t>=WIN_FIRST&&t<=WIN_LAST)?t:WIN_FIRST;})();
+let VIEW='gantt';
+try{VIEW=localStorage.getItem('view')||(innerWidth<=640?'agenda':'gantt');}catch(e){VIEW=innerWidth<=640?'agenda':'gantt';}
+function setView(v){
+  VIEW=v; try{localStorage.setItem('view',v);}catch(e){}
+  document.body.classList.toggle('vagenda',v==='agenda');
+  document.getElementById('agenda').hidden=(v!=='agenda');
+  document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v));
+  if(v==='agenda')renderAgenda(); else {fit();deps();}
+}
+function agendaRows(day){
+  const q=document.getElementById('fq').value.trim().toLowerCase();
+  const fp=document.getElementById('fp').checked, fc=document.getElementById('fc').checked;
+  return DATA.filter(t=>!t.done&&t.s<=day&&day<=t.e&&worksOn(ukey(t.u),day)
+    &&(!selV.size||selV.has(t.vo))&&(!selR.size||selR.has(t.vo+'|'+t.ro))&&(!selU.size||selU.has(ukey(t.u)))&&!hidden.has(ukey(t.u))
+    &&(!fc||(t.f!==null&&t.f<=2))&&(fp||!t.pm)&&(!q||t.n.toLowerCase().includes(q)||t.id.toLowerCase().includes(q)));
+}
+function renderAgenda(){
+  if(VIEW!=='agenda')return;
+  const body=document.getElementById('abody'); if(!body)return;
+  const rows=agendaRows(AD), today=iso(new Date());
+  const groups=new Map(); rows.forEach(t=>{const k=ukey(t.u); if(!groups.has(k))groups.set(k,[]); groups.get(k).push(t);});
+  const e=x=>String(x).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  let h=`<div class="adh"><b>${AD===today?'Vandaag · ':''}${dlong(AD)}</b><span>${rows.length} ${rows.length===1?'taak':'taken'} · ${groups.size} ${groups.size===1?'uitvoerder':'uitvoerders'}${HOL.includes(AD)?' · feestdag':''}</span></div>`;
+  if(!rows.length){
+    let n=null; for(let d=addD(AD,1);d<=WIN_LAST;d=addD(d,1)){ if(agendaRows(d).length){n=d;break;} }
+    h+=`<div class="ag"><div class="acard"><span class="t">Geen werkzaamheden gepland op deze dag.</span>${n?`<span class="r">Eerstvolgende dag met werk: <a href="#" data-go="${n}">${dlong(n)}</a></span>`:''}</div></div>`;
+  }
+  [...groups.entries()].sort((a,b)=>(UV[a[0]]||[a[0]])[0]<(UV[b[0]]||[b[0]])[0]?-1:1).forEach(([k,ts])=>{
+    const [lab,col]=UV[k]||[k,'--c-overig'];
+    h+=`<div class="ag"><div class="agh"><i style="background:var(${col})"></i>${e(lab)}<span>${ts.length} ${ts.length===1?'taak':'taken'}</span></div>`;
+    ts.sort((a,b)=>(a.vo+a.ro+a.n)<(b.vo+b.ro+b.n)?-1:1).forEach(t=>{
+      const wd=[]; for(let d=t.s;d<=t.e;d=addD(d,1)) if(worksOn(ukey(t.u),d)) wd.push(d);
+      const nth=wd.indexOf(AD)+1, tot=wd.length;
+      const pills=[]; if(tot>1)pills.push(`<span class="pill">dag ${nth} van ${tot}</span>`);
+      if(nth===1)pills.push('<span class="pill pri">start vandaag</span>'.replace('vandaag',AD===today?'vandaag':'deze dag'));
+      if(nth===tot)pills.push('<span class="pill pri">klaar deze dag</span>');
+      if(t.dl)pills.push(`<span class="pill ${t.e>t.dl?'red':''}">deadline ${dshort(t.dl)}</span>`);
+      if(t.c)pills.push('<span class="pill red">geen speling</span>');
+      if(t.pm)pills.push('<span class="pill">na verhuizing</span>');
+      const pre=t.p.map(byId).filter(Boolean).map(x=>`${e(x.n)} (t/m ${dshort(x.e)})`).join('; ');
+      h+=`<div class="acard${t.pm?' pm':''}"><div class="t"><small>${t.id}</small>${e(t.n)}</div><div class="r">${e(t.v)} › ${e(t.r)}</div>${pills.length?`<div class="b">${pills.join('')}</div>`:''}${pre?`<div class="w">Na: ${pre}</div>`:''}</div>`;
+    });
+    h+='</div>';
+  });
+  body.innerHTML=h;
+  const di=document.getElementById('adate'); di.min=WIN_FIRST; di.max=WIN_LAST; di.value=AD;
+  document.getElementById('aprev').disabled=AD<=WIN_FIRST; document.getElementById('anext').disabled=AD>=WIN_LAST;
+}
+function goDay(d){ AD=d<WIN_FIRST?WIN_FIRST:(d>WIN_LAST?WIN_LAST:d); renderAgenda(); const b=document.getElementById('abody'); if(b)b.scrollTop=0; }
+(function(){
+  document.getElementById('views').addEventListener('click',e=>{const b=e.target.closest('button'); if(b)setView(b.dataset.v);});
+  document.getElementById('aprev').addEventListener('click',()=>goDay(addD(AD,-1)));
+  document.getElementById('anext').addEventListener('click',()=>goDay(addD(AD,1)));
+  document.getElementById('atoday').addEventListener('click',()=>{const t=iso(new Date()); goDay(t);});
+  document.getElementById('adate').addEventListener('change',e=>{if(e.target.value)goDay(e.target.value);});
+  document.getElementById('abody').addEventListener('click',e=>{const a=e.target.closest('a[data-go]'); if(a){e.preventDefault();goDay(a.dataset.go);}});
+  let x0=null,y0=null; const ab=document.getElementById('abody');
+  ab.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;y0=e.touches[0].clientY;},{passive:true});
+  ab.addEventListener('touchend',e=>{ if(x0===null)return; const dx=e.changedTouches[0].clientX-x0, dy=e.changedTouches[0].clientY-y0; x0=null;
+    if(Math.abs(dx)>70&&Math.abs(dx)>2*Math.abs(dy)) goDay(addD(AD,dx<0?1:-1)); },{passive:true});
+  setView(VIEW);
 })();
 </script>
 
